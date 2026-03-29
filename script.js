@@ -491,29 +491,29 @@ function initSensors() {
     ctx.fillStyle = "rgba(255, 250, 241, 0.98)";
     ctx.fillRect(272, 42, 250, 166);
     ctx.fillStyle = "#54636a";
-    ctx.fillText("鍦伴潰", 424, 302);
+    ctx.fillText("??", 424, 302);
 
     if (sensor.type === "frame") {
-      drawSensorCaption(["鍗曟鏇濆厜褰㈡垚妗嗗箙鍍忕墖"]);
+      drawSensorCaption(["??????????????"]);
     } else if (sensor.type === "line") {
-      drawSensorCaption(["鎺ㄦ壂寮忛€愮嚎鎴愬儚"]);
+      drawSensorCaption(["?????????????"]);
     } else if (sensor.type === "pos") {
       drawSensorCaption([
-        "GNSS / IMU 杩炲悎瀹氫綅瀹氬悜",
-        "杈撳嚭 X銆乊銆乑 鍙婂Э鎬佸弬鏁",
-        "涓虹洿鎺ュ鏂逛綅鎻愪緵鍩虹"
+        "GNSS / IMU ?????????",
+        "?? X?Y?Z ?????",
+        "??????????????"
       ]);
     } else if (sensor.type === "lidar") {
       drawSensorCaption([
-        "鏈鸿浇 / 鏄熻浇婵€鍏夋壂鎻",
-        "涓诲姩寮忔祴璺濅笌涓夌淮閲囬泦",
-        "閫傚悎 DSM / DEM 蹇€熸瀯寤"
+        "?? / ??????",
+        "?????????????",
+        "?? DSM / DEM ????"
       ]);
     } else if (sensor.type === "sar") {
       drawSensorCaption([
-        "渚ц鏂滆窛鎶曞奖",
-        "鍏ㄥぉ鏃跺叏澶╁€欐垚鍍",
-        "閫傚悎澶氫簯闆惧拰瀹忚鐩戞祴"
+        "??????",
+        "????????",
+        "??????????"
       ]);
     }
   }
