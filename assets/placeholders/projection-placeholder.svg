@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
+  <rect width="960" height="600" fill="#f5f1e8"/>
+  <rect x="60" y="60" width="840" height="480" rx="36" fill="#ffffff" stroke="#1d4ed8" stroke-opacity=".25" stroke-width="4"/>
+  <text x="100" y="180" fill="#1d4ed8" font-size="54" font-family="Segoe UI, Microsoft YaHei">中心投影图片区</text>
+  <text x="100" y="260" fill="#5d686e" font-size="30" font-family="Segoe UI, Microsoft YaHei">适合放主垂面草图、共线关系图、关键点示意图</text>
+  <circle cx="280" cy="260" r="12" fill="#1d4ed8"/>
+  <path d="M280 260L180 470L480 470Z" fill="#1d4ed8" fill-opacity=".1" stroke="#1d4ed8" stroke-width="4"/>
+  <path d="M520 200h240" stroke="#d97706" stroke-width="10" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
+  <rect width="960" height="600" fill="#f5f1e8"/>
+  <rect x="60" y="60" width="840" height="480" rx="36" fill="#ffffff" stroke="#8b5cf6" stroke-opacity=".25" stroke-width="4"/>
+  <text x="100" y="180" fill="#8b5cf6" font-size="54" font-family="Segoe UI, Microsoft YaHei">后方交会图片区</text>
+  <text x="100" y="260" fill="#5d686e" font-size="30" font-family="Segoe UI, Microsoft YaHei">适合放控制点分布图、误差方程流程图、课件截图</text>
+  <circle cx="260" cy="390" r="10" fill="#0f766e"/>
+  <circle cx="380" cy="350" r="10" fill="#0f766e"/>
+  <circle cx="500" cy="430" r="10" fill="#0f766e"/>
+  <circle cx="620" cy="320" r="10" fill="#0f766e"/>
+  <circle cx="450" cy="210" r="12" fill="#8b5cf6"/>
+  <path d="M450 210L260 390M450 210L380 350M450 210L500 430M450 210L620 320" stroke="#8b5cf6" stroke-width="4"/>
+</svg>

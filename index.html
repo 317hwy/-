@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>摄影测量学与影像解析基础互动演示</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow">Photogrammetry Interactive Chapter Demo</p>
+        <h1>摄影测量学与影像解析基础</h1>
+        <p class="hero-summary">
+          以网页形式串联传感器、航摄规划、坐标变换、点线面、中心投影、共线方程、像点位移与单像后方交会，
+          用可拖拽、可调参、可替换图片的方式组织为一套交互式内容页面。
+        </p>
+        <div class="hero-actions">
+          <a href="#map" class="button primary">进入知识地图</a>
+        </div>
+        <div class="hero-tags">
+          <span>6 个内容模块</span>
+          <span>4 个参数交互区</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-grid"></div>
+        <div class="hero-card">
+          <h2>本页覆盖内容</h2>
+          <ul class="mini-list">
+            <li>摄影测量传感器</li>
+            <li>航摄规划</li>
+            <li>点线面与坐标</li>
+            <li>共线方程</li>
+            <li>像点位移</li>
+            <li>单像空间后方交会</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <nav class="section-nav">
+      <a href="#map">知识地图</a>
+      <a href="#sensors">传感器</a>
+      <a href="#flight">航摄规划</a>
+      <a href="#geometry">点线面与坐标</a>
+      <a href="#projection">共线方程</a>
+      <a href="#displacement">像点位移</a>
+      <a href="#resection">单像后方交会</a>
+    </nav>
+
+    <main>
+      <section class="section" id="map">
+        <div class="section-heading">
+          <p class="eyebrow">Knowledge Map</p>
+          <h2>章节总览</h2>
+        </div>
+        <div class="chapter-grid" id="chapterGrid"></div>
+      </section>
+
+      <section class="section" id="sensors">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 1</p>
+          <h2>摄影测量传感器互动台</h2>
+          <p>点击不同传感器，观察成像方式、主动/被动特征与典型应用差异。</p>
+        </div>
+        <div class="two-column">
+          <div class="panel">
+            <div class="toolbar" id="sensorButtons"></div>
+            <canvas id="sensorCanvas" width="560" height="360" aria-label="传感器互动示意"></canvas>
+            <div class="metric-row" id="sensorMetrics"></div>
+          </div>
+          <div class="panel">
+            <div id="sensorDetails" class="rich-card"></div>
+            <div class="image-slot sensor-image-slot" data-slot="sensor">
+              <div class="image-slot-header">
+                <div>
+                  <h3>传感器图片插槽</h3>
+                </div>
+                <label class="upload-button">上传图片<input type="file" accept="image/*"></label>
+              </div>
+              <div class="sensor-image-meta">
+                <span class="metric-pill" id="activeSensorImageLabel">当前图片：面阵相机</span>
+                <span class="metric-pill" id="activeSensorImageState">状态：默认占位图</span>
+              </div>
+              <img src="./assets/placeholders/sensor-placeholder.svg" alt="传感器占位图" class="slot-preview" id="sensorPreview">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="flight">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 2</p>
+          <h2>航摄规划计算板</h2>
+          <p>用滑块即时查看比例尺、相对航高、GSD 和重叠度变化，理解航摄设计约束。</p>
+        </div>
+        <div class="two-column">
+          <div class="panel">
+            <div class="slider-grid">
+              <label>焦距 f（mm）<input id="focalSlider" type="range" min="50" max="180" value="120"></label>
+              <label>相对航高 H（m）<input id="heightSlider" type="range" min="300" max="4000" value="1200"></label>
+              <label>像元尺寸 a（μm）<input id="pixelSlider" type="range" min="2" max="12" value="5"></label>
+              <label>航向重叠（%）<input id="forwardOverlapSlider" type="range" min="40" max="80" value="65"></label>
+              <label>旁向重叠（%）<input id="sideOverlapSlider" type="range" min="20" max="60" value="35"></label>
+            </div>
+            <div class="metric-board" id="flightMetrics"></div>
+            <canvas id="flightCanvas" width="560" height="320" aria-label="航摄规划示意"></canvas>
+          </div>
+          <div class="panel">
+            <div class="note-card" id="flightNotes"></div>
+            <div class="image-slot" data-slot="flight">
+              <div class="image-slot-header">
+                <h3>航线设计图片插槽</h3>
+                <label class="upload-button">上传图片<input type="file" accept="image/*"></label>
+              </div>
+              <img src="./assets/placeholders/flight-placeholder.svg" alt="航摄规划占位图" class="slot-preview">
+            </div>
+          </div>
+        </div>
+        <div class="knowledge-stack">
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Core Concepts</p>
+              <h3>核心概念与定义</h3>
+            </div>
+            <div class="concept-grid">
+              <div class="concept-card">
+                <h4>非量测摄影机</h4>
+                <p>光学畸变差较大且无框标装置，但价格低、灵活性强，适合遥控、水下、高速等特殊场景。</p>
+              </div>
+              <div class="concept-card">
+                <h4>摄影机主距 / 焦距 f</h4>
+                <p>摄影机物镜中心到像片面的固定距离，是决定比例尺、视场角和航高设计的核心参数。</p>
+              </div>
+              <div class="concept-card">
+                <h4>像片倾角 α</h4>
+                <p>摄影瞬间主光轴与铅垂线的夹角。竖直摄影通常要求倾角小于 2°~3°，倾斜摄影则常用于城市三维重建。</p>
+                <div class="concept-image-tools" data-concept-key="tilt-angle">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="像片倾角示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>地面分辨率 GSD</h4>
+                <p>影像上单个像素在地面代表的尺寸，单位一般为米/像素，是成图质量与航摄设计之间的关键桥梁。</p>
+                <div class="concept-image-tools" data-concept-key="gsd">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="GSD 示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>相对航高与绝对航高</h4>
+                <p>相对航高以地面平均高程基准面为参考，绝对航高则相对于平均海平面，两者满足 <code>H绝 = H + H地</code>。</p>
+                <div class="concept-image-tools" data-concept-key="flight-height">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="航高示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>航摄高程要求</h4>
+                <p>实际飞行时相对航高与设计值相差不得大于 5%，同一航线内相邻摄站高差一般不超过 50 m。</p>
+                <div class="concept-image-tools" data-concept-key="height-requirement">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="航摄高程要求示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>航向重叠度 px</h4>
+                <p>同一航线相邻像片的重叠，通常要求 60%~65% 以上，以保证复杂起伏地区仍能满足立体测图需要。</p>
+                <div class="concept-image-tools" data-concept-key="forward-overlap">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="航向重叠度示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>旁向重叠度 py</h4>
+                <p>相邻航带像片之间的重叠，一般控制在 30%~35%，地形起伏越大越需要适当增加。</p>
+                <div class="concept-image-tools" data-concept-key="side-overlap">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="旁向重叠度示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>三度重叠</h4>
+                <p>航向上三张相邻像片拥有公共重叠区，是连续立体观察和像片连接的必要条件。</p>
+                <div class="concept-image-tools" data-concept-key="triple-overlap">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="三度重叠示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>立体像对与摄影基线 B</h4>
+                <p>两张航向相邻像片构成立体像对，相邻摄影站之间的空间距离称为摄影基线。</p>
+                <div class="concept-image-tools" data-concept-key="baseline">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="摄影基线示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>航带弯曲度</h4>
+                <p>衡量航带偏离设计直线程度的重要指标，通常要求最大偏距比不大于 3%。</p>
+                <div class="concept-image-tools" data-concept-key="strip-curvature">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="航带弯曲度示意图" class="concept-preview hidden">
+                </div>
+              </div>
+              <div class="concept-card">
+                <h4>像片旋偏角 κ</h4>
+                <p>描述像片相对航带方向的旋转，一般规定不超过 6°，过大时会显著削弱有效重叠区域。</p>
+                <div class="concept-image-tools" data-concept-key="kappa-angle">
+                  <label class="mini-upload-button">上传示意图<input type="file" accept="image/*"></label>
+                  <img src="" alt="像片旋偏角示意图" class="concept-preview hidden">
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Key Formulae</p>
+              <h3>重要公式</h3>
+            </div>
+            <div class="formula-grid">
+              <div class="formula-tile">
+                <h4>相对航高公式</h4>
+                <p><code>H = (f × GSD) / a</code></p>
+                <p>其中 <code>H</code> 为相对航高，<code>f</code> 为焦距，<code>GSD</code> 为地面分辨率，<code>a</code> 为像元大小。</p>
+              </div>
+              <div class="formula-tile">
+                <h4>摄影比例尺公式</h4>
+                <p><code>1 / m = l / L = f / H</code></p>
+                <p>影像距离与地面距离的比值等于焦距与航高之比，因此也可写成 <code>H = m f</code>。</p>
+              </div>
+              <div class="formula-tile">
+                <h4>绝对航高公式</h4>
+                <p><code>H绝 = H + H地</code></p>
+                <p>绝对航高由相对航高与地面平均高程相加得到。</p>
+              </div>
+              <div class="formula-tile">
+                <h4>航向重叠度</h4>
+                <p><code>Px = (px / lx) × 100%</code></p>
+                <p>用重叠部分边长与像幅边长之比表达航向重叠程度。</p>
+              </div>
+              <div class="formula-tile">
+                <h4>旁向重叠度</h4>
+                <p><code>Py = (py / ly) × 100%</code></p>
+                <p>用相邻航带公共覆盖宽度与像幅宽度之比表达旁向重叠程度。</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="geometry">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 3-4</p>
+          <h2>透视变换中的特殊点、线、面</h2>
+          <p>围绕中心投影中的关键几何元素，展示投影中心、像主点、像底点、等角点、主垂面、主纵线与迹线等核心概念，并引出中心投影与正射投影的根本差异。</p>
+        </div>
+        <div class="two-column">
+          <div class="panel">
+            <div class="diagram-showcase">
+              <img src="./assets/perspective-special-elements.png" alt="透视变换中的特殊点线面示意图" class="slot-preview perspective-diagram">
+            </div>
+            <div class="note-card">
+              <h3>图中重点元素</h3>
+              <div class="metric-row">
+                <span class="metric-pill">投影中心 S</span>
+                <span class="metric-pill">迹线 TT</span>
+                <span class="metric-pill">像主点 o / 地主点 O</span>
+                <span class="metric-pill">像底点 n / 地底点 N</span>
+                <span class="metric-pill">像等角点 c / 地等角点 C</span>
+                <span class="metric-pill">主垂面 W</span>
+                <span class="metric-pill">主纵线 vv</span>
+                <span class="metric-pill">主灭点 i</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="knowledge-panel geometry-info-panel">
+              <div class="section-heading compact-heading">
+                <p class="eyebrow">Projection Basics</p>
+                <h3>中心投影与正射投影</h3>
+              </div>
+              <div class="concept-grid single-column-grid">
+                <div class="concept-card">
+                  <h4>投影的基本定义</h4>
+                  <p>投影是使用一组假想的直线，也就是投影射线，将物体投射到投影平面上，并在该平面形成构像的过程。</p>
+                </div>
+                <div class="concept-card">
+                  <h4>投影的三大分类</h4>
+                  <p><strong>中心投影</strong>：所有投影射线汇聚于同一个投影中心，航摄像片属于这种形式，存在变形且比例尺处处不等。</p>
+                  <p><strong>平行投影</strong>：所有投影射线平行于某一固定方向。</p>
+                  <p><strong>斜投影 / 正射投影</strong>：斜投影是射线与投影面斜交的平行投影；正射投影则要求射线平行且垂直于投影面，地图属于正射投影。</p>
+                </div>
+                <div class="concept-card">
+                  <h4>为什么地形图比例尺一致</h4>
+                  <p>正射投影中投影射线互相平行且与投影平面正交，因此图上各处比例尺一致、几何关系稳定，不会像中心投影那样随着位置和高差变化而改变。</p>
+                </div>
+              </div>
+            </div>
+            <div class="knowledge-panel geometry-info-panel">
+              <div class="section-heading compact-heading">
+                <p class="eyebrow">Key Differences</p>
+                <h3>航摄像片与地形图的六大差异</h3>
+              </div>
+              <div class="difference-list">
+                <div class="summary-item">
+                  <h4>投影方法</h4>
+                  <p>航摄像片属于中心投影，地形图属于正射投影。</p>
+                </div>
+                <div class="summary-item">
+                  <h4>误差来源</h4>
+                  <p>像片误差主要来自像片倾斜和地形起伏；地形图误差主要来自测量精度和绘图精度。</p>
+                </div>
+                <div class="summary-item">
+                  <h4>比例尺特性</h4>
+                  <p>航摄像片比例尺处处不一致；地形图比例尺处处一致。</p>
+                </div>
+                <div class="summary-item">
+                  <h4>表示形式</h4>
+                  <p>像片呈现真实影像；地形图属于线化图。</p>
+                </div>
+                <div class="summary-item">
+                  <h4>表示内容</h4>
+                  <p>像片是客观成像，保留大量细节；地形图经过人为取舍，使用专门符号和注记表达内容。</p>
+                </div>
+                <div class="summary-item">
+                  <h4>几何特性</h4>
+                  <p>两幅相邻航摄像片可构成立体像对，而单张地形图不具备此特性。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="projection">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 3-4</p>
+          <h2>共线方程</h2>
+        </div>
+
+        <div class="projection-knowledge-grid">
+          <article class="knowledge-panel projection-topic projection-topic-wide">
+            <div class="projection-topic-head">
+              <div>
+                <p class="eyebrow">Part 1</p>
+                <h3>摄影测量常用的坐标系</h3>
+              </div>
+              <span class="metric-pill">物方与像方解析关系基础</span>
+            </div>
+            <p class="projection-intro">核心任务是建立地面点与像点之间的解析联系。常用的五种坐标系如下：</p>
+            <div class="projection-split">
+              <div class="projection-text">
+                <div class="projection-list">
+                  <div class="summary-item">
+                    <h4>像平面坐标系 (o-xy)</h4>
+                    <p>表示像点在像平面上的位置。可由物理框标建立，也可取像主点为原点。</p>
+                  </div>
+                  <div class="summary-item">
+                    <h4>像空间坐标系 (S-xyz)</h4>
+                    <p>右手系，原点在投影中心 S。像点坐标通常记为 <code>(x, y, -f)</code>。</p>
+                  </div>
+                  <div class="summary-item">
+                    <h4>像空间辅助坐标系 (S-XYZ)</h4>
+                    <p>右手系，原点仍在投影中心，用于计算中的过渡与统一表达。</p>
+                  </div>
+                  <div class="summary-item">
+                    <h4>摄影测量坐标系 (A-XpYpZp)</h4>
+                    <p>右手系，原点取地面某点 A，是像空间辅助坐标系与物空间坐标系之间的过渡坐标系。</p>
+                  </div>
+                  <div class="summary-item">
+                    <h4>物空间坐标系 (O-XtYtZt)</h4>
+                    <p>左手系，用于描述地面物体所在空间，通常与大地坐标系对应。</p>
+                  </div>
+                </div>
+              </div>
+              <div class="image-slot projection-image-slot" data-slot="projection-coordinate-systems">
+                <div class="image-slot-header">
+                  <div>
+                    <h3>坐标系示意图</h3>
+                    <p class="slot-subtitle">上传您的讲义截图、手绘图或教材插图，页面会保留最新上传内容。</p>
+                  </div>
+                  <label class="upload-button">上传图片<input type="file" accept="image/*"></label>
+                </div>
+                <img src="./assets/placeholders/projection-placeholder.svg" alt="摄影测量坐标系示意图占位图" class="slot-preview">
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel projection-topic projection-topic-wide">
+            <div class="projection-topic-head">
+              <div>
+                <p class="eyebrow">Part 2</p>
+                <h3>影像的内外方位元素</h3>
+              </div>
+              <span class="metric-pill">3 个内方位 + 6 个外方位</span>
+            </div>
+            <div class="projection-split">
+              <div class="projection-text">
+                <div class="concept-grid">
+                  <div class="concept-card">
+                    <h4>内方位元素</h4>
+                    <p>用于确定镜头中心与影像平面的相对位置，包含 3 个参数：</p>
+                    <ul class="mini-list">
+                      <li>像主点相对影像中心的位置 <code>(x0, y0)</code></li>
+                      <li>主距或焦距 <code>f</code></li>
+                    </ul>
+                  </div>
+                  <div class="concept-card">
+                    <h4>外方位元素</h4>
+                    <p>用于确定摄影瞬间摄影光束的空间位置和姿态，共 6 个参数：</p>
+                    <ul class="mini-list">
+                      <li>线元素：<code>(Xs, Ys, Zs)</code></li>
+                      <li>角元素：<code>(φ, ω, κ)</code></li>
+                    </ul>
+                  </div>
+                  <div class="concept-card">
+                    <h4>线元素含义</h4>
+                    <p>描述摄影中心 <code>S</code> 在物方空间坐标系中的位置，是空间平移参数。</p>
+                  </div>
+                  <div class="concept-card">
+                    <h4>角元素含义</h4>
+                    <p><code>φ-ω-κ</code> 系统常用于表示姿态：<code>φ</code> 为航向倾角，<code>ω</code> 为旁向倾角，<code>κ</code> 为像片旋角。</p>
+                  </div>
+                </div>
+              </div>
+              <div class="projection-mini-slot-grid">
+                <div class="image-slot projection-image-slot projection-image-slot-compact" data-slot="projection-inner-orientation">
+                  <div class="image-slot-header compact-image-slot-header">
+                    <h3>内方位图</h3>
+                    <label class="upload-button compact-upload-button">上传<input type="file" accept="image/*"></label>
+                  </div>
+                  <img src="./assets/placeholders/projection-placeholder.svg" alt="内方位元素示意图占位图" class="slot-preview projection-slot-preview-compact">
+                </div>
+                <div class="image-slot projection-image-slot projection-image-slot-compact" data-slot="projection-outer-orientation">
+                  <div class="image-slot-header compact-image-slot-header">
+                    <h3>外方位图</h3>
+                    <label class="upload-button compact-upload-button">上传<input type="file" accept="image/*"></label>
+                  </div>
+                  <img src="./assets/placeholders/projection-placeholder.svg" alt="外方位元素示意图占位图" class="slot-preview projection-slot-preview-compact">
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel projection-topic">
+            <div class="projection-topic-head">
+              <div>
+                <p class="eyebrow">Part 3</p>
+                <h3>空间直角坐标系的旋转变换</h3>
+              </div>
+              <span class="metric-pill">正交变换</span>
+            </div>
+            <p class="projection-intro">同原点坐标系之间可通过依次绕三个坐标轴旋转实现转换，旋转矩阵 <code>R</code> 具有正交矩阵性质。</p>
+            <div class="projection-list">
+              <div class="summary-item">
+                <h4>重要特性</h4>
+                <p><code>R</code> 的行列式为 1，同行或同列元素平方和为 1，不同行或不同列对应元素乘积之和为 0。</p>
+              </div>
+              <div class="formula-tile">
+                <h4>正变换公式</h4>
+                <p><code>[X Y Z]^T = R [x y -f]^T</code></p>
+              </div>
+              <div class="formula-tile">
+                <h4>逆变换公式</h4>
+                <p><code>[x y -f]^T = R^-1 [X Y Z]^T = R^T [X Y Z]^T</code></p>
+              </div>
+              <div class="formula-tile">
+                <h4>旋转矩阵形式</h4>
+                <p><code>R = [a1 a2 a3; b1 b2 b3; c1 c2 c3]</code></p>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel projection-topic">
+            <div class="projection-topic-head">
+              <div>
+                <p class="eyebrow">Part 4</p>
+                <h3>中心投影的构像方程（共线条件方程）</h3>
+              </div>
+              <span class="metric-pill">摄影测量核心公式</span>
+            </div>
+            <p class="projection-intro">摄影瞬间，像点、对应地面点与投影中心始终三点共线。这一关系是单像空间后方交会、光束法平差等算法的基础。</p>
+            <div class="projection-formula-stack">
+              <div class="formula-card">
+                <h3>共线条件方程</h3>
+                <div class="collinearity-equation">
+                  <div class="equation-brace">{</div>
+                  <div class="equation-system">
+                    <div class="equation-line">
+                      <span class="equation-left"><em>x</em> - <em>x</em><sub>0</sub> = -<em>f</em></span>
+                      <span class="equation-fraction">
+                        <span class="equation-numerator"><em>a</em><sub>1</sub>(<em>X</em><sub>A</sub> - <em>X</em><sub>S</sub>) + <em>b</em><sub>1</sub>(<em>Y</em><sub>A</sub> - <em>Y</em><sub>S</sub>) + <em>c</em><sub>1</sub>(<em>Z</em><sub>A</sub> - <em>Z</em><sub>S</sub>)</span>
+                        <span class="equation-denominator"><em>a</em><sub>3</sub>(<em>X</em><sub>A</sub> - <em>X</em><sub>S</sub>) + <em>b</em><sub>3</sub>(<em>Y</em><sub>A</sub> - <em>Y</em><sub>S</sub>) + <em>c</em><sub>3</sub>(<em>Z</em><sub>A</sub> - <em>Z</em><sub>S</sub>)</span>
+                      </span>
+                    </div>
+                    <div class="equation-line">
+                      <span class="equation-left"><em>y</em> - <em>y</em><sub>0</sub> = -<em>f</em></span>
+                      <span class="equation-fraction">
+                        <span class="equation-numerator"><em>a</em><sub>2</sub>(<em>X</em><sub>A</sub> - <em>X</em><sub>S</sub>) + <em>b</em><sub>2</sub>(<em>Y</em><sub>A</sub> - <em>Y</em><sub>S</sub>) + <em>c</em><sub>2</sub>(<em>Z</em><sub>A</sub> - <em>Z</em><sub>S</sub>)</span>
+                        <span class="equation-denominator"><em>a</em><sub>3</sub>(<em>X</em><sub>A</sub> - <em>X</em><sub>S</sub>) + <em>b</em><sub>3</sub>(<em>Y</em><sub>A</sub> - <em>Y</em><sub>S</sub>) + <em>c</em><sub>3</sub>(<em>Z</em><sub>A</sub> - <em>Z</em><sub>S</sub>)</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="note-card">
+                <h3>参数说明</h3>
+                <div class="equation-legend">
+                  <p><code>(x, y)</code>：像点 <code>a</code> 在像平面直角坐标系中的坐标</p>
+                  <p><code>(XA, YA, ZA)</code>：像点对应物点在地面坐标系中的坐标</p>
+                  <p><code>(XS, YS, ZS)</code>：投影中心 <code>S</code> 在地面坐标系中的坐标，即外方位线元素</p>
+                  <p><code>(a_i, b_i, c_i)</code>：9 个方向余弦，包含 3 个外方位角元素</p>
+                  <p><code>(f, x0, y0)</code>：像片的内方位元素</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="displacement">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 5</p>
+          <h2>像点位移</h2>
+          <p>围绕航摄像片中的两类主要位移展开：像片倾斜引起的像点位移 <code>δα</code> 与地形起伏引起的像点位移 <code>δh</code>。拖动参数可观察位移大小、方向及其几何中心的变化。</p>
+        </div>
+        <div class="two-column">
+          <div class="panel">
+            <canvas id="displacementCanvas" width="560" height="360" aria-label="像点位移示意"></canvas>
+            <div class="slider-grid compact">
+              <label>向径 r / rc（mm）<input id="radiusSlider" type="range" min="10" max="120" value="60"></label>
+              <label>高差 h（m）<input id="reliefSlider" type="range" min="-40" max="80" value="35"></label>
+              <label>航高 H（m）<input id="flightHSlider" type="range" min="300" max="2500" value="1000"></label>
+              <label>倾角 α（°）<input id="tiltSlider" type="range" min="0" max="25" value="6"></label>
+              <label>极角 φ（°）<input id="thetaSlider" type="range" min="0" max="360" value="120"></label>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="metric-board" id="displacementMetrics"></div>
+            <div class="formula-card">
+              <h3>计算公式</h3>
+              <div class="formula-display-stack">
+                <div class="formula-display-line">
+                  <span class="formula-inline"><em>δ</em><sub>α</sub> = -</span>
+                  <span class="equation-fraction formula-fraction">
+                    <span class="equation-numerator"><em>r</em><sub>c</sub><sup>2</sup></span>
+                    <span class="equation-denominator"><em>f</em></span>
+                  </span>
+                  <span class="formula-inline"><em>sin</em> <em>φ</em> <em>sin</em> <em>α</em></span>
+                </div>
+                <div class="formula-display-line">
+                  <span class="formula-inline"><em>δ</em><sub>h</sub> = <em>na</em> - <em>na</em><sup>0</sup> =</span>
+                  <span class="equation-fraction formula-fraction">
+                    <span class="equation-numerator"><em>r</em><em>h</em></span>
+                    <span class="equation-denominator"><em>H</em></span>
+                  </span>
+                </div>
+                <div class="formula-display-line">
+                  <span class="formula-inline"><em>Δh</em> =</span>
+                  <span class="equation-fraction formula-fraction">
+                    <span class="equation-numerator"><em>R</em><em>h</em></span>
+                    <span class="equation-denominator"><em>H</em> - <em>h</em></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="knowledge-stack">
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Part 1</p>
+              <h3>像片倾斜引起的像点位移 (δα)</h3>
+            </div>
+            <div class="concept-grid">
+              <div class="concept-card">
+                <h4>基本定义</h4>
+                <p>在地面平坦条件下，由于像片倾斜，实际成像点相对于理想水平像片上的成像点发生偏移。</p>
+              </div>
+              <div class="concept-card">
+                <h4>几何中心</h4>
+                <p>倾斜位移发生在以等角点 <code>c</code> 为中心的辐射线上，主纵线方向位移最大。</p>
+              </div>
+              <div class="concept-card">
+                <h4>位移规律</h4>
+                <p>当 <code>φ = 0°</code> 或 <code>180°</code> 时，<code>δα = 0</code>；当 <code>φ ∈ (0°, 180°)</code> 时，像点向等角点方向位移；当 <code>φ ∈ (180°, 360°)</code> 时，像点背离等角点位移。</p>
+              </div>
+              <div class="concept-card">
+                <h4>几何表现</h4>
+                <p>地面上的正方形在倾斜像片上会变成不规则四边形，说明局部形状和比例关系发生变化。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Part 2</p>
+              <h3>地形起伏引起的像点位移 (δh)</h3>
+            </div>
+            <div class="concept-grid">
+              <div class="concept-card">
+                <h4>基本定义</h4>
+                <p>即使像片完全水平，只要地面点相对基准面存在高差 <code>h</code>，其构像也会偏离理想位置，这种位移通常称为投影差。</p>
+              </div>
+              <div class="concept-card">
+                <h4>关键参数</h4>
+                <p><code>h</code> 为地面点到基准面的高差，<code>H</code> 为摄影航高，<code>r</code> 为像点到像底点 <code>n</code> 的距离。</p>
+              </div>
+              <div class="concept-card">
+                <h4>位移特性</h4>
+                <p>投影差发生在以像底点 <code>n</code> 为中心的辐射线上，高差越大、离像底点越远，位移越显著。</p>
+              </div>
+              <div class="concept-card">
+                <h4>地面投影差</h4>
+                <p>除像片上的 <code>δh = rh/H</code> 外，地面上的投影差可写为 <code>Δh = Rh/(H-h)</code>，用于联系像片量测与地面影响。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Combined Effects</p>
+              <h3>综合影响与其它因素</h3>
+            </div>
+            <div class="difference-list">
+              <div class="summary-item">
+                <h4>比例尺不一致</h4>
+                <p>倾斜和地形起伏会使像片上各点位移不同，因此像片比例尺处处不等。</p>
+              </div>
+              <div class="summary-item">
+                <h4>系统误差源</h4>
+                <p>除两类主要位移外，物镜畸变、大气折光、地球曲率及 CCD 变形等也会引起规律性像点位移，通常通过数学模型改正。</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="resection">
+        <div class="section-heading">
+          <p class="eyebrow">Chapter 6</p>
+          <h2>单像空间后方交会</h2>
+          <p>利用单张影像范围内控制点的地面坐标与像点坐标，根据共线条件方程反求摄影瞬间的 6 个外方位元素，即 <code>Xs, Ys, Zs, φ, ω, κ</code>。</p>
+        </div>
+        <div class="two-column">
+          <div class="panel">
+            <div class="slider-grid compact">
+              <label>控制点数量<input id="controlSlider" type="range" min="3" max="8" value="4"></label>
+              <label>初值质量<input id="initSlider" type="range" min="1" max="10" value="6"></label>
+              <label>观测噪声等级<input id="noiseSlider" type="range" min="0" max="10" value="3"></label>
+            </div>
+            <div class="metric-board" id="resectionMetrics"></div>
+            <div class="iteration-board" id="iterationBoard"></div>
+          </div>
+          <div class="panel">
+            <div class="formula-card">
+              <h3>核心定义</h3>
+              <p>已知：内方位元素 <code>(x0, y0, f)</code>、控制点物方坐标 <code>(X, Y, Z)</code>、像点观测值 <code>(x, y)</code>。</p>
+              <p>待求：6 个外方位元素 <code>Xs, Ys, Zs, φ, ω, κ</code>。</p>
+              <p>理论基础：共线条件方程。每个控制点提供 2 个方程，因此至少需要 3 个控制点。</p>
+            </div>
+            <div class="note-card">
+              <h3>计算流程</h3>
+              <ol class="step-list">
+                <li>输入原始数据并归算像点坐标。</li>
+                <li>给外方位元素设置初值，常见做法是将旋转角初值取 0、坐标初值取控制点均值。</li>
+                <li>组成旋转矩阵 <code>R</code>，计算像点近似值及观测残差。</li>
+                <li>对共线方程进行泰勒展开并线性化，逐点建立误差方程。</li>
+                <li>按最小二乘原理解法方程，求未知数改正数。</li>
+                <li>判断是否收敛，未收敛则更新参数继续迭代。</li>
+              </ol>
+            </div>
+            <div class="image-slot" data-slot="resection">
+              <div class="image-slot-header">
+                <h3>后方交会示意图</h3>
+                <label class="upload-button">上传图片<input type="file" accept="image/*"></label>
+              </div>
+              <img src="./assets/placeholders/resection-placeholder.svg" alt="单像空间后方交会占位图" class="slot-preview">
+            </div>
+          </div>
+        </div>
+        <div class="knowledge-stack">
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Linearization</p>
+              <h3>数学模型与线性化处理</h3>
+            </div>
+            <div class="concept-grid">
+              <div class="concept-card">
+                <h4>非线性本质</h4>
+                <p>共线方程本身是非线性的，因此需要通过泰勒级数展开并保留一次项，将其转化为可求解的线性误差方程。</p>
+              </div>
+              <div class="concept-card">
+                <h4>误差方程</h4>
+                <p>线性化后可写成类似 <code>vx = a11 dXs + ... - lx</code> 的形式，再统一组成法方程。</p>
+              </div>
+              <div class="concept-card">
+                <h4>迭代求解</h4>
+                <p>由于线性化依赖初值，求解需要逐步趋近，直到改正数小于限差为止。</p>
+              </div>
+              <div class="concept-card">
+                <h4>最小二乘</h4>
+                <p>通过最小二乘原理解法方程，可以同时利用多余观测，提高解算稳定性与可靠性。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Methods</p>
+              <h3>三种主要解法对比</h3>
+            </div>
+            <div class="comparison-table" role="table" aria-label="单像空间后方交会三种解法对比">
+              <div class="comparison-row comparison-head" role="row">
+                <div class="comparison-cell comparison-dimension" role="columnheader">比较维度</div>
+                <div class="comparison-cell" role="columnheader">欧拉角法</div>
+                <div class="comparison-cell" role="columnheader">方向余弦法</div>
+                <div class="comparison-cell" role="columnheader">单位四元数法</div>
+              </div>
+              <div class="comparison-row" role="row">
+                <div class="comparison-cell comparison-dimension" role="rowheader">待求参数</div>
+                <div class="comparison-cell" role="cell">3 个旋转角</div>
+                <div class="comparison-cell" role="cell">9 个方向余弦</div>
+                <div class="comparison-cell" role="cell">4 个四元数分量 <code>q</code></div>
+              </div>
+              <div class="comparison-row" role="row">
+                <div class="comparison-cell comparison-dimension" role="rowheader">初始值依赖</div>
+                <div class="comparison-cell" role="cell">依赖严重，初值差时大倾角影像易不收敛</div>
+                <div class="comparison-cell" role="cell">依赖较低，旋转阵初值取单位阵通常即可</div>
+                <div class="comparison-cell" role="cell">依赖较低，常取 <code>q0 = 1</code> 作为初值</div>
+              </div>
+              <div class="comparison-row" role="row">
+                <div class="comparison-cell comparison-dimension" role="rowheader">数学特性</div>
+                <div class="comparison-cell" role="cell">三角函数多，易出现多值性和奇异性</div>
+                <div class="comparison-cell" role="cell">需附加 6 个正交限制条件参与平差</div>
+                <div class="comparison-cell" role="cell">4 个参数描述 3D 旋转，需 1 个限制条件</div>
+              </div>
+              <div class="comparison-row" role="row">
+                <div class="comparison-cell comparison-dimension" role="rowheader">对应公式</div>
+                <div class="comparison-cell comparison-formula-cell" role="cell">
+                  <div class="mini-formula-block">
+                    <p>利用 <code>φ, ω, κ</code> 间接表示旋转矩阵：</p>
+                    <p><code>R = [a1 a2 a3; b1 b2 b3; c1 c2 c3]</code></p>
+                    <p><code>φ = -arctg(a3 / c3)</code></p>
+                    <p><code>ω = -arcsin(b3)</code></p>
+                    <p><code>κ = -arctg(b1 / b2)</code></p>
+                  </div>
+                </div>
+                <div class="comparison-cell comparison-formula-cell" role="cell">
+                  <div class="mini-formula-block">
+                    <p><code>vx = ∂x/∂Xs dXs + ... + ∂x/∂c3 dc3 - lx</code></p>
+                    <p><code>vy = ∂y/∂Xs dYs + ... + ∂y/∂c3 dc3 - ly</code></p>
+                    <p><code>a1²+a2²+a3²-1 = 0</code></p>
+                    <p><code>b1²+b2²+b3²-1 = 0</code></p>
+                    <p><code>c1²+c2²+c3²-1 = 0</code></p>
+                  </div>
+                </div>
+                <div class="comparison-cell comparison-formula-cell" role="cell">
+                  <div class="mini-formula-block">
+                    <p><code>vx = ∂x/∂Xs dXs + ... + ∂x/∂q3 dq3 - lx</code></p>
+                    <p><code>vy = ∂y/∂Xs dYs + ... + ∂y/∂q3 dq3 - ly</code></p>
+                    <p><code>2q0dq0 + 2q1dq1 + 2q2dq2 + 2q3dq3 + w = 0</code></p>
+                  </div>
+                </div>
+              </div>
+              <div class="comparison-row" role="row">
+                <div class="comparison-cell comparison-dimension" role="rowheader">性能表现</div>
+                <div class="comparison-cell" role="cell">几何概念明确，但收敛性对初值敏感</div>
+                <div class="comparison-cell" role="cell">收敛情况通常优于四元数法，结果更接近欧拉角法</div>
+                <div class="comparison-cell" role="cell">计算相对复杂，收敛次数与方向余弦法相近</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="knowledge-panel">
+            <div class="section-heading compact-heading">
+              <p class="eyebrow">Accuracy</p>
+              <h3>精度评估与注意事项</h3>
+            </div>
+            <div class="difference-list">
+              <div class="summary-item">
+                <h4>单位权中误差</h4>
+                <p><code>m0 = ±sqrt([vv] / (2n - 6))</code>，其中 <code>n</code> 为控制点个数，可用于评价整体平差质量。</p>
+              </div>
+              <div class="summary-item">
+                <h4>外方位元素精度</h4>
+                <p>可由法方程系数矩阵逆阵 <code>(A^T A)^-1</code> 的主对角线元素计算外方位元素中误差。</p>
+              </div>
+              <div class="summary-item">
+                <h4>控制点配置要求</h4>
+                <p>控制点应避免落在同一圆柱面上，否则解可能不唯一；工程上常在像片四角布设 4 个控制点以提高可靠性。</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="image-lightbox hidden" id="imageLightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭预览">×</button>
+    <div class="lightbox-dialog">
+      <img id="lightboxImage" class="lightbox-image" src="" alt="图片放大预览">
+    </div>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>

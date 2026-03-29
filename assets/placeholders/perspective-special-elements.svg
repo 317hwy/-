@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+  <rect width="1200" height="760" fill="#49686a"/>
+  <g fill="#ffe800" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="28" font-weight="700">
+    <text x="18" y="52">投影中心S</text>
+    <text x="18" y="102">透视轴（迹线）TT</text>
+    <text x="18" y="152">像主点o；地主点O</text>
+    <text x="18" y="202">像片主距f</text>
+    <text x="18" y="252">摄影方向SO</text>
+    <text x="18" y="302">像底点n；地底点N</text>
+    <text x="18" y="352">航高SN</text>
+    <text x="18" y="402">主垂面W</text>
+    <text x="18" y="452">主纵线vv；摄影方向线VV</text>
+    <text x="18" y="502">摄影倾角α</text>
+    <text x="18" y="552">像等角点c；地等角点C</text>
+    <text x="18" y="602">主合点（主灭点）i</text>
+    <text x="18" y="652">合线hihi；等比线hchc</text>
+    <text x="18" y="702">主通点J</text>
+  </g>
+
+  <g fill="none" stroke="#ffffff" stroke-width="3">
+    <rect x="430" y="78" width="712" height="332"/>
+    <path d="M430 410h670l82 70H516z"/>
+    <path d="M770 20l180 180-80 110-180-180z"/>
+    <path d="M420 300h-58l108 114h238"/>
+    <path d="M430 410l140-166 188 0"/>
+    <path d="M570 244l200 0"/>
+    <path d="M570 244l0 166"/>
+    <path d="M570 244l182 84"/>
+    <path d="M570 244l82 166"/>
+    <path d="M570 244l332 166"/>
+    <path d="M570 244l-138 166"/>
+    <path d="M570 244l-74 248"/>
+    <path d="M690 76l-120 168"/>
+    <path d="M820 26l-68 136"/>
+    <path d="M878 78l148 0"/>
+    <path d="M748 160l-38 64"/>
+    <path d="M706 192l90 42"/>
+    <path d="M760 410l120-120"/>
+    <path d="M650 410l66-84"/>
+    <path d="M952 206l-146 204"/>
+    <path d="M880 410l140 0"/>
+    <path d="M430 298h-68"/>
+    <path d="M480 410h-66"/>
+    <path d="M636 208l-26 18"/>
+    <path d="M634 368l-26 18"/>
+    <path d="M880 186l-24 18"/>
+    <path d="M948 88l-24 18"/>
+  </g>
+
+  <g stroke="#ffffff" stroke-width="3" stroke-dasharray="14 10" fill="none">
+    <path d="M428 298h640"/>
+    <path d="M570 244l122 228"/>
+    <path d="M640 410l-84-84"/>
+    <path d="M486 492l84-82"/>
+    <path d="M790 410h220"/>
+  </g>
+
+  <g fill="#ffffff" font-family="Times New Roman, serif" font-size="26" font-style="italic">
+    <text x="442" y="110">W</text>
+    <text x="566" y="112">S</text>
+    <text x="606" y="104">h</text><text x="621" y="110">o</text>
+    <text x="742" y="58">h</text><text x="757" y="64">i</text>
+    <text x="940" y="112">v</text>
+    <text x="472" y="320">T</text>
+    <text x="572" y="332">n</text>
+    <text x="682" y="338">c</text>
+    <text x="708" y="220">o</text>
+    <text x="816" y="176">i</text>
+    <text x="846" y="214">h</text><text x="861" y="220">i</text>
+    <text x="842" y="332">h</text><text x="857" y="338">o</text>
+    <text x="1148" y="424">V</text>
+    <text x="1098" y="426">O</text>
+    <text x="1004" y="486">E</text>
+    <text x="896" y="430">C</text>
+    <text x="694" y="434">N</text>
+    <text x="474" y="426">v</text>
+    <text x="378" y="424">V</text>
+    <text x="760" y="110">v</text>
+    <text x="622" y="178">f</text>
+    <text x="604" y="158">α</text>
+    <text x="730" y="110">i</text>
+    <text x="818" y="110">v</text>
+    <text x="492" y="706">T</text>
+    <text x="416" y="474">J</text>
+  </g>
+</svg>

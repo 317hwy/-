@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
+  <rect width="960" height="600" fill="#f5f1e8"/>
+  <rect x="60" y="60" width="840" height="480" rx="36" fill="#ffffff" stroke="#d97706" stroke-opacity=".25" stroke-width="4"/>
+  <text x="100" y="180" fill="#d97706" font-size="54" font-family="Segoe UI, Microsoft YaHei">航摄规划图片区</text>
+  <text x="100" y="260" fill="#5d686e" font-size="30" font-family="Segoe UI, Microsoft YaHei">适合放航线设计图、重叠度示意图、实拍航片</text>
+  <path d="M140 400h680" stroke="#5d686e" stroke-width="4"/>
+  <rect x="220" y="330" width="180" height="110" fill="#0f766e" fill-opacity=".14" stroke="#0f766e" stroke-width="4"/>
+  <rect x="340" y="330" width="180" height="110" fill="#d97706" fill-opacity=".14" stroke="#d97706" stroke-width="4"/>
+</svg>
