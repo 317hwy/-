@@ -58,36 +58,38 @@ const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const degToRad = (value) => value * Math.PI / 180;
 const formatMatrixRow = (row) => row.map((value) => value.toFixed(3).padStart(7, " ")).join(" ");
 const metricCard = (label, value, tip) => `<div class="metric-card"><span>${label}</span><strong>${value}</strong><small>${tip}</small></div>`;
+const assetVersion = "20260329b";
+const versionedAsset = (path) => path ? `${path}?v=${assetVersion}` : path;
 
 const sensorImageStoreKey = "photogrammetry-demo-sensor-images";
-const defaultSensorImage = "./assets/placeholders/sensor-placeholder.svg";
+const defaultSensorImage = versionedAsset("./assets/placeholders/sensor-placeholder.svg");
 const defaultSensorImages = {
-  frame: "./assets/frozen/sensor-frame.png",
-  line: "./assets/frozen/sensor-line.png",
-  pos: "./assets/frozen/sensor-pos.png",
-  lidar: "./assets/frozen/sensor-lidar.png",
-  sar: "./assets/frozen/sensor-sar.png"
+  frame: versionedAsset("./assets/frozen/sensor-frame.png"),
+  line: versionedAsset("./assets/frozen/sensor-line.png"),
+  pos: versionedAsset("./assets/frozen/sensor-pos.png"),
+  lidar: versionedAsset("./assets/frozen/sensor-lidar.png"),
+  sar: versionedAsset("./assets/frozen/sensor-sar.png")
 };
 const conceptImageStoreKey = "photogrammetry-demo-flight-concept-images";
 const defaultConceptImages = {
-  "tilt-angle": "./assets/frozen/concept-tilt-angle.png",
-  "gsd": "./assets/frozen/concept-gsd.png",
-  "flight-height": "./assets/frozen/concept-flight-height.png",
-  "height-requirement": "./assets/frozen/concept-height-requirement.png",
-  "forward-overlap": "./assets/frozen/concept-forward-overlap.png",
-  "side-overlap": "./assets/frozen/concept-side-overlap.png",
-  "triple-overlap": "./assets/frozen/concept-triple-overlap.png",
-  "baseline": "./assets/frozen/concept-baseline.png",
-  "strip-curvature": "./assets/frozen/concept-strip-curvature.png",
-  "kappa-angle": "./assets/frozen/concept-kappa-angle.png"
+  "tilt-angle": versionedAsset("./assets/frozen/concept-tilt-angle.png"),
+  "gsd": versionedAsset("./assets/frozen/concept-gsd.png"),
+  "flight-height": versionedAsset("./assets/frozen/concept-flight-height.png"),
+  "height-requirement": versionedAsset("./assets/frozen/concept-height-requirement.png"),
+  "forward-overlap": versionedAsset("./assets/frozen/concept-forward-overlap.png"),
+  "side-overlap": versionedAsset("./assets/frozen/concept-side-overlap.png"),
+  "triple-overlap": versionedAsset("./assets/frozen/concept-triple-overlap.png"),
+  "baseline": versionedAsset("./assets/frozen/concept-baseline.png"),
+  "strip-curvature": versionedAsset("./assets/frozen/concept-strip-curvature.png"),
+  "kappa-angle": versionedAsset("./assets/frozen/concept-kappa-angle.png")
 };
 const panelImageStoreKey = "photogrammetry-demo-panel-images";
 const defaultPanelImages = {
-  flight: "./assets/frozen/panel-flight.png",
-  "projection-coordinate-systems": "./assets/frozen/projection-coordinate-systems.png",
-  "projection-inner-orientation": "./assets/frozen/projection-inner-orientation.png",
-  "projection-outer-orientation": "./assets/frozen/projection-outer-orientation.png",
-  resection: "./assets/frozen/resection-diagram.png"
+  flight: versionedAsset("./assets/frozen/panel-flight.png"),
+  "projection-coordinate-systems": versionedAsset("./assets/frozen/projection-coordinate-systems.png"),
+  "projection-inner-orientation": versionedAsset("./assets/frozen/projection-inner-orientation.png"),
+  "projection-outer-orientation": versionedAsset("./assets/frozen/projection-outer-orientation.png"),
+  resection: versionedAsset("./assets/frozen/resection-diagram.png")
 };
 const imageDbName = "photogrammetry-demo-assets";
 const imageStoreName = "images";
