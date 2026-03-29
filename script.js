@@ -66,23 +66,36 @@ const defaultSensorImages = {
   line: "./assets/frozen/sensor-line.png",
   pos: "./assets/frozen/sensor-pos.png",
   lidar: "./assets/frozen/sensor-lidar.png",
-  sar: defaultSensorImage
+  sar: "./assets/frozen/sensor-sar.png"
 };
 const conceptImageStoreKey = "photogrammetry-demo-flight-concept-images";
 const defaultConceptImages = {
   "tilt-angle": "./assets/frozen/concept-tilt-angle.png",
+  "gsd": "./assets/frozen/concept-gsd.png",
+  "flight-height": "./assets/frozen/concept-flight-height.png",
   "height-requirement": "./assets/frozen/concept-height-requirement.png",
   "forward-overlap": "./assets/frozen/concept-forward-overlap.png",
   "side-overlap": "./assets/frozen/concept-side-overlap.png",
-  "triple-overlap": "./assets/frozen/concept-triple-overlap.png"
+  "triple-overlap": "./assets/frozen/concept-triple-overlap.png",
+  "baseline": "./assets/frozen/concept-baseline.png",
+  "strip-curvature": "./assets/frozen/concept-strip-curvature.png",
+  "kappa-angle": "./assets/frozen/concept-kappa-angle.png"
 };
 const panelImageStoreKey = "photogrammetry-demo-panel-images";
 const defaultPanelImages = {
-  flight: "./assets/frozen/panel-flight.png"
+  flight: "./assets/frozen/panel-flight.png",
+  "projection-coordinate-systems": "./assets/frozen/projection-coordinate-systems.png",
+  "projection-inner-orientation": "./assets/frozen/projection-inner-orientation.png",
+  "projection-outer-orientation": "./assets/frozen/projection-outer-orientation.png",
+  resection: "./assets/frozen/resection-diagram.png"
 };
 const imageDbName = "photogrammetry-demo-assets";
 const imageStoreName = "images";
 let imageDbPromise;
+
+function getBundledImage(defaultPath, fallbackPath) {
+  return defaultPath || fallbackPath || "";
+}
 
 function openImageDb() {
   if (imageDbPromise) return imageDbPromise;
@@ -175,12 +188,14 @@ function bindImageSlots() {
     const input = slot.querySelector("input[type='file']");
     const preview = slot.querySelector(".slot-preview");
     const dbKey = `panel:${slotKey}`;
+    const bundledDefault = defaultPanelImages[slotKey];
 
-    imageDbGet(dbKey).then((storedValue) => {
-      if (storedValue) {
-        preview.src = storedValue;
-        return;
-      }
+    if (bundledDefault) {
+      preview.src = bundledDefault;
+    }
+
+    imageDbGet(dbKey).then(() => {
+      if (bundledDefault) return;
       migrateLegacyImage(dbKey, storedPanelImages, slotKey).then((legacyValue) => {
         if (legacyValue) {
           preview.src = legacyValue;
@@ -189,6 +204,7 @@ function bindImageSlots() {
         }
       });
     }).catch(() => {
+      if (bundledDefault) return;
       if (storedPanelImages[slotKey]) preview.src = storedPanelImages[slotKey];
       else if (defaultPanelImages[slotKey]) preview.src = defaultPanelImages[slotKey];
     });
@@ -230,13 +246,15 @@ function initConceptImageUploads() {
     const input = tool.querySelector("input[type='file']");
     const preview = tool.querySelector(".concept-preview");
     const dbKey = `concept:${key}`;
+    const bundledDefault = defaultConceptImages[key];
 
-    imageDbGet(dbKey).then((storedValue) => {
-      if (storedValue) {
-        preview.src = storedValue;
-        preview.classList.remove("hidden");
-        return;
-      }
+    if (bundledDefault) {
+      preview.src = bundledDefault;
+      preview.classList.remove("hidden");
+    }
+
+    imageDbGet(dbKey).then(() => {
+      if (bundledDefault) return;
       migrateLegacyImage(dbKey, storedConceptImages, key).then((legacyValue) => {
         if (legacyValue) {
           preview.src = legacyValue;
@@ -247,6 +265,7 @@ function initConceptImageUploads() {
         }
       });
     }).catch(() => {
+      if (bundledDefault) return;
       if (storedConceptImages[key]) {
         preview.src = storedConceptImages[key];
         preview.classList.remove("hidden");
@@ -289,7 +308,7 @@ function initSensors() {
   let scan = 0;
   const storedSensorImages = JSON.parse(localStorage.getItem(sensorImageStoreKey) || "{}");
   const sensorImages = Object.fromEntries(
-    Object.keys(sensors).map((key) => [key, storedSensorImages[key] || defaultSensorImages[key] || defaultSensorImage])
+    Object.keys(sensors).map((key) => [key, getBundledImage(defaultSensorImages[key], storedSensorImages[key] || defaultSensorImage)])
   );
 
   function isDefaultSensorImage(key) {
@@ -327,23 +346,12 @@ function initSensors() {
   }
 
   Object.keys(sensors).forEach((key) => {
-    imageDbGet(`sensor:${key}`).then((storedValue) => {
-      if (storedValue) {
-        sensorImages[key] = storedValue;
-      } else if (storedSensorImages[key]) {
-        sensorImages[key] = storedSensorImages[key];
-        migrateLegacyImage(`sensor:${key}`, storedSensorImages, key);
-      } else if (defaultSensorImages[key]) {
-        sensorImages[key] = defaultSensorImages[key];
-      }
+    imageDbGet(`sensor:${key}`).then(() => {
+      sensorImages[key] = getBundledImage(defaultSensorImages[key], storedSensorImages[key] || defaultSensorImage);
       if (key === active) refreshSensorImagePanel();
     }).catch(() => {
-      if (storedSensorImages[key]) {
-        sensorImages[key] = storedSensorImages[key];
-      } else if (defaultSensorImages[key]) {
-        sensorImages[key] = defaultSensorImages[key];
-        if (key === active) refreshSensorImagePanel();
-      }
+      sensorImages[key] = getBundledImage(defaultSensorImages[key], storedSensorImages[key] || defaultSensorImage);
+      if (key === active) refreshSensorImagePanel();
     });
   });
 
