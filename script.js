@@ -491,29 +491,29 @@ function initSensors() {
     ctx.fillStyle = "rgba(255, 250, 241, 0.98)";
     ctx.fillRect(272, 42, 250, 166);
     ctx.fillStyle = "#54636a";
-    ctx.fillText("??", 424, 302);
+    ctx.fillText("\u5730\u9762", 424, 302);
 
     if (sensor.type === "frame") {
-      drawSensorCaption(["??????????????"]);
+      drawSensorCaption(["\u9762\u9635\u76f8\u673a\u4e00\u6b21\u66dd\u5149\u5f62\u6210\u5b8c\u6574\u50cf\u5e45"]);
     } else if (sensor.type === "line") {
-      drawSensorCaption(["?????????????"]);
+      drawSensorCaption(["\u7ebf\u9635\u76f8\u673a\u6cbf\u98de\u884c\u65b9\u5411\u63a8\u626b\u6210\u50cf"]);
     } else if (sensor.type === "pos") {
       drawSensorCaption([
-        "GNSS / IMU ?????????",
-        "?? X?Y?Z ?????",
-        "??????????????"
+        "GNSS / IMU \u63d0\u4f9b\u7a7a\u95f4\u4f4d\u7f6e\u4e0e\u59ff\u6001",
+        "\u8f93\u51fa X\u3001Y\u3001Z \u7b49\u5e73\u79fb\u53c2\u6570",
+        "\u4e3a\u76f4\u63a5\u5b9a\u5411\u63d0\u4f9b\u5916\u65b9\u4f4d\u5143\u7d20\u652f\u6491"
       ]);
     } else if (sensor.type === "lidar") {
       drawSensorCaption([
-        "?? / ??????",
-        "?????????????",
-        "?? DSM / DEM ????"
+        "\u673a\u8f7d / \u661f\u8f7d\u6fc0\u5149\u626b\u63cf",
+        "\u4e3b\u52a8\u53d1\u5c04\u8109\u51b2\u83b7\u53d6\u8ddd\u79bb\u548c\u4f4d\u7f6e",
+        "\u9002\u5408 DSM / DEM \u5feb\u901f\u6784\u5efa"
       ]);
     } else if (sensor.type === "sar") {
       drawSensorCaption([
-        "??????",
-        "????????",
-        "??????????"
+        "\u4fa7\u89c6\u76f8\u5e72\u6210\u50cf",
+        "\u5168\u5929\u65f6\u5168\u5929\u5019\u6210\u50cf",
+        "\u9002\u5408\u591a\u4e91\u96fe\u548c\u5b8f\u89c2\u76d1\u6d4b"
       ]);
     }
   }
